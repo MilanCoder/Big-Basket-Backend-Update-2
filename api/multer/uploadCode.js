@@ -2,6 +2,13 @@ const multer = require('multer');
 const path = require('path')
 
 
+const storage = multer.diskStorage({
+    destination:'./uploads/',
+    filename:function(req,file,cb){
+        cb(null,file.fieldname + '-'+ req.body.categoryId+'-'+req.body.subcategoryId+'-'+req.body.productId+'-'+req.body.subproductId+'-'+req.body.index+path.extname(file.originalname));
+
+    }
+})
 function checkFileType(file,cb){
     const filetypes =/jpeg|png|jpg|gif/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
@@ -14,16 +21,15 @@ function checkFileType(file,cb){
     }
 
 
-    const upload = function(storageEngine){
-      const uploadDetails=multer({
-    storage:storageEngine,
-   limits:{fileSize:1000},
+    
+      const upload=multer({
+    storage:storage,
+   limits:{fileSize:1000000},
     fileFilter:function(res,file,cb){
         checkFileType(file,cb)
     }
 }).single('myImage');
-return uploadDetails;
-}
+
 
 
 
