@@ -1,21 +1,29 @@
 {
-  "name": "bigbasketbackend",
+  "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "dependencies": {
+    "aws-sdk": "^2.382.0",
+    "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
+    "excel-as-json": "^2.0.2",
     "express": "^4.16.4",
-    "express-session": "^1.15.6",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.4.0",
     "multer": "^1.4.1",
-    "path": "^0.12.7"
+    "multer-s3": "^2.9.0",
+    "path": "^0.12.7",
+    "shortid": "^2.2.14",
+    "uuid": "^3.3.2",
+    "xls-to-json-lc": "^0.3.4",
+    "xlsx-to-json-lc": "^0.5.0"
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node app.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC"
