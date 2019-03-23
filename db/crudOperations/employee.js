@@ -13,8 +13,8 @@ const empCrud={
 
     doLogin(req,res,object){
         
-        console.log('came here later');
-        Emp.findOne(object,(err,data)=>{
+   
+        Emp.findOne(object.email,(err,data)=>{
             if(err){
                 res.json(err);
             }

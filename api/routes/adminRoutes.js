@@ -11,18 +11,37 @@ const upload2=require('../../Utils/multer/productImagess3');   //requiring multe
 const singleUpload=upload.single('productupload');        
 const securekey ='Imsecure';          //secret key of webtokens
 const productCrud=require('../../db/crudOperations/Product'); 
+const s3 = require('../../Utils/multer/getImageFiles');
+
 
 adminRoutes.post('/login',function(req,res){
-    adminCrud.login(res,{id:req.body.id, name:req.body.name, password:req.body.password});
-    jwt.sign({adminData},securekey,{expiresIn:'3000s'},(err,token)=>{      //token is generated after checking the presence of user
-        res.json({
-            token:token
-        })
+  
+    let adminData={'id':req.body.id, 'name':req.body.name, 'password':req.body.password}
+   var adminObject = adminCrud.login(res,adminData);
+   console.log(adminObject);
+  if(adminObject!=null){
+   jwt.sign({adminObject},securekey,{expiresIn:'3000s'},(err,token)=>{      //token is generated after checking the presence of user
+    res.json({
+        token:token     
     })
+})}
+})
+
+adminRoutes.get('/getUnverifiedEmployee',(req,res)=>{
+    adminCrud.getUnverifiedEmployees(res);
 })
 
 
+adminRoutes.get('/getVerifiedEmployee',(req,res)=>{
+    adminCrud.getVerifiedEmployees(res);
+})
 
+adminRoutes.post('/verifyUser',(req,res)=>{
+    adminCrud.verifyEmployee(req.body.id,res);
+})
+adminRoutes.post('/unVerifyUser',(req,res)=>{
+    adminCrud.unVerifyEmployee(req.body.id,res);
+})
 
 
 adminRoutes.post('/upload',function(req,res){
@@ -79,6 +98,24 @@ adminRoutes.post('/upload',function(req,res){
     
 //});
 
+adminRoutes.post('/getImagesUrl',(req,res)=>{
+    let returnImagesArray={};
+    for(let key of req.body.keyArray){
+        console.log(key+' '+req.body.mobile_no+'.png',req.body.keyArray)
+ let params={Bucket:'big-basket-bucket',Key:key+' '+req.body.mobile_no+'.png'}; //seconds
+
+s3.getObject(params,(url)=>{
+    if(url!=null){
+        console.log(url);
+        returnImagesArray[key]=url;
+    }
+});
+ 
+}
+res.json({'Images':returnImagesArray});
+}
+)
+
 
 
 adminRoutes.post('/editProducts',verifyToken,(req,res)=>{
@@ -130,6 +167,8 @@ adminRoutes.post('imageUpload',(req,res)=>{
         
     
 })
+
+
 
 
 function verifyToken(req,res,next){               //checking for webtoken in the header of req and filling it into req.token

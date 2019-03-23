@@ -1,3 +1,4 @@
+
 const express=require('express');
 const empRoutes=express.Router();
 const upload=require("../../Utils/multer/uploadFiless3");
@@ -5,16 +6,12 @@ const multer=require("multer");
 const empCrud=require('../../db/crudOperations/employee');
 const idGen=require('../../Utils/idGenerator/idGen');
 const nullChecker=require('../../Utils/nullChecker');
-const refCodeGen=require('../../Utils/referrallGen/referrallCode');
+
 const passwordEncryptor = require('../../Utils/passwordEncryptor');
- 
+const refCodeGen=require('../../Utils/referrallGen/referrallCode');
 //var empCrud=require("../../db/crudOperations/employee");
 empRoutes.post('/login',(req,res)=>{
-
-        console.log(req.body.name);
-        var name=req.body.name;
-        var gender=req.body.gender;
-        var object={name,gender};
+        var object={'email':req.body.email,'password':req.body.password};
 
         empCrud.doLogin(req,res,object);
 
@@ -30,8 +27,8 @@ empRoutes.post('/register',(req,res)=>{
         nullChecker.check(req.body.name,res);
         object.name=req.body.name;
         nullChecker.check(req.body.password,res);
-        object.password = passwordEncryptor.generatePassHash(req.body.password,10);
-         
+
+        object.password=passwordEncryptor.generatePassHash(req.body.password,10)
 
         /*object.address[0].fulladdress=req.body.address.fulladdress;
         object.address[0].street=req.body.address.street;
@@ -49,7 +46,7 @@ empRoutes.post('/register',(req,res)=>{
                 }
             }
         }
-        
+        object.selfReferralCode=refCodeGen.refCodeGen(req.body.mobile_no);
         object.email=req.body.email;
         nullChecker.check(req.body.mobile_no,res);
         object.mobile_no=req.body.mobile_no;

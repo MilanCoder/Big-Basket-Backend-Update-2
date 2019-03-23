@@ -10,4 +10,4 @@ const adminLogin=new Schema({
 })
 
 
-module.exports=mongoose.model("admin",adminLogin);
+module.exports=mongoose.model("admin",adminLogin,'admin')

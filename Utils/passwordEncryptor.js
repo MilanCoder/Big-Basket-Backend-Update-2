@@ -1,20 +1,24 @@
 const bcrypt = require('bcrypt');
 const passwordEncryptor = {
     generatePassHash(plainText,salt){
-        let passhash = null;
+        
+        let password=null;
         if(plainText!=null){
-        bcrypt.hash(plainText, salt, function(err, hash) {
-            passhash=hash;
-        });
+      password= bcrypt.hashSync(plainText, salt, function(err, hash) {
+          if(err){
+              return err;
+          }else{
+            return hash
+        }});
     }
-return passhash;
+return password;
 }
 ,
 verifyPassword(plainText,hash){
     let isPresent = false;
-    bcrypt.compare(plainText, hash, function(err, res) {
+    isPresent=bcrypt.compareSync(plainText, hash, function(err, res) {
     if(res==true){ 
-        isPresent=true;
+      return true;
     }});
 return isPresent;
 }
